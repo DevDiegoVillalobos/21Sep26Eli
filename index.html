@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>21/09/2026</title>
+  <link rel="icon" type="image/png" href="img/hearth.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Elementos de Audio (songTwo ya no lleva loop obligatorio para detectar su final) -->
+  <audio id="songOne" src="sound/songOne.mp3" loop preload="auto"></audio>
+  <audio id="songTwo" src="sound/songTwo.mp3" preload="auto"></audio>
+
+  <!-- Overlay de Transición: Flor Blanca -->
+  <div id="flower-overlay">
+    <svg class="flower-icon" viewBox="0 0 100 100">
+      <path fill="#ffffff" d="M50 0 C55 25 75 25 75 50 C75 75 55 75 50 100 C45 75 25 75 25 50 C25 25 45 25 50 0 Z" />
+      <path fill="#ffffff" transform="rotate(45 50 50)" d="M50 0 C55 25 75 25 75 50 C75 75 55 75 50 100 C45 75 25 75 25 50 C25 25 45 25 50 0 Z" />
+      <circle cx="50" cy="50" r="12" fill="#fff59d" />
+    </svg>
+  </div>
+
+  <!-- REPRODUCTOR CÁLIDO MULTIMEDIA -->
+  <div id="audio-player">
+    <button id="play-pause-btn" aria-label="Play/Pausa">▶</button>
+    <div class="player-info">
+      <div class="volume-container">
+        <span class="vol-icon">🔈</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.4">
+      </div>
+      <div class="seek-container">
+        <input type="range" id="seek-slider" min="0" max="100" step="0.1" value="0" aria-label="Adelantar o atrasar la canción">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN DEL JUEGO -->
+  <div id="game-section">
+    <h1>🏵️ Puzzle Time 🏵️</h1>
+    <div id="progress-counter">Piezas encajadas: <span id="locked-count">0</span> / 50</div>
+    <div id="puzzle-container">
+      <div id="board"></div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN DE VICTORIA -->
+  <div id="win-screen">
+    <!-- Estrellas de fondo -->
+    <div id="stars-container"></div>
+    <!-- Pétalos amarillos -->
+    <div id="petals-container"></div>
+    
+    <div class="win-content">
+      <h1>✨ ¡Lo lograste! ✨</h1>
+      <p>Unos lirios amarillos para iluminar tu día 💛</p>
+      
+      <!-- Bastidor del lienzo pintado -->
+      <div id="canvas-frame">
+        <img id="final-image" src="img/imgTwo.jpg" alt="Lirios Amarillos Completo">
+      </div>
+      
+      <!-- Nota de regalo -->
+      <div class="love-note">
+        <p>“Un detalle amarillo para alguien súper especial.” 🌼</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>   
+</body>
+</html>

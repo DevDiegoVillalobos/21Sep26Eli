@@ -1,0 +1,367 @@
+* {
+    box-sizing: border-box;
+    touch-action: manipulation;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #fffde7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    color: #333;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 1s ease;
+}
+
+/* Modo Noche Estrellada para la victoria */
+body.win-mode {
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    color: #fff;
+}
+
+/* ESTRELLAS ANIMADAS */
+#stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+    animation: twinkle infinite ease-in-out;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* OVERLAY DE FLOR BLANCA TRANSICIÓN */
+#flower-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+}
+
+.flower-icon {
+    width: 80px;
+    height: 80px;
+    transform: scale(0);
+}
+
+#flower-overlay.blooming {
+    animation: flashBg 0.8s forwards ease-in-out;
+}
+
+#flower-overlay.blooming .flower-icon {
+    animation: expandFlower 0.8s forwards ease-in-out;
+}
+
+@keyframes expandFlower {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: scale(8) rotate(90deg); opacity: 1; }
+    100% { transform: scale(35) rotate(180deg); opacity: 1; }
+}
+
+@keyframes flashBg {
+    0% { opacity: 0; background-color: rgba(255,255,255,0); }
+    50% { opacity: 1; background-color: rgba(255,255,255,0.9); }
+    100% { opacity: 1; background-color: rgba(255,255,255,1); }
+}
+
+/* REPRODUCTOR DE MÚSICA CÁLIDO */
+#audio-player {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid #ffe082;
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(245, 127, 23, 0.15);
+    margin: 15px auto 5px auto;
+    width: fit-content;
+    max-width: min(90vw, 360px);
+    z-index: 100;
+    position: relative;
+}
+
+#play-pause-btn {
+    background: linear-gradient(135deg, #fbc02d, #f57f17);
+    color: white;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(245, 127, 23, 0.3);
+    transition: transform 0.1s, opacity 0.3s;
+}
+
+#play-pause-btn:active {
+    transform: scale(0.92);
+}
+
+/* Estado Bloqueado del Reproductor */
+#play-pause-btn:disabled, #seek-slider:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(0.5);
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 6px;
+}
+
+.vol-icon { font-size: 0.85rem; }
+
+#volume-slider, #seek-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 5px;
+    background: #ffe082;
+    outline: none;
+}
+
+#volume-slider { width: 70px; }
+#seek-slider { width: 130px; background: #e0e0e0; transition: opacity 0.3s; }
+
+#volume-slider::-webkit-slider-thumb, #seek-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #f57f17;
+    cursor: pointer;
+}
+
+/* SECCIÓN DEL JUEGO */
+#game-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: calc(100vh - 80px);
+    padding: 10px 15px 60px 15px;
+}
+
+h1 { 
+    color: #f57f17; 
+    font-size: 1.8rem; 
+    margin: 0 0 4px 0; 
+}
+
+#progress-counter {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f57f17;
+    margin-bottom: 10px;
+    background: #fff8e1;
+    padding: 4px 14px;
+    border-radius: 15px;
+    border: 1px solid #ffe082;
+}
+
+#puzzle-container {
+    width: min(85vw, 380px); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+#board {
+    width: 100%;
+    aspect-ratio: 768 / 1365;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    grid-template-rows: repeat(10, 1fr);
+    gap: 1px;
+    background: #e0e0e0;
+    padding: 2px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(245, 127, 23, 0.2);
+    position: relative;
+}
+
+.tile {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    border-radius: 1px;
+    touch-action: none;
+    transition: transform 0.05s linear, outline 0.1s ease, filter 0.3s ease;
+    z-index: 1;
+}
+
+.tile.selected {
+    outline: 3px solid #f57f17;
+    transform: scale(0.92);
+    z-index: 10;
+}
+
+.tile.dragging {
+    cursor: grabbing;
+    z-index: 100 !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    opacity: 0.9;
+}
+
+/* Pieza Bloqueada en posición correcta */
+.tile.locked {
+    pointer-events: none !important;
+    cursor: default;
+    outline: 1.5px solid #ffb300;
+    box-shadow: inset 0 0 8px rgba(255, 215, 0, 0.6);
+    filter: brightness(1.05);
+}
+
+/* PANTALLA DE VICTORIA Y EFECTO PINTORESCO */
+#win-screen {
+    display: none;
+    min-height: calc(100vh - 80px);
+    width: 100vw;
+    padding: 10px 10px 40px 10px;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.win-content {
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#win-screen h1 {
+    color: #ffe082;
+    text-shadow: 0 0 10px rgba(255, 224, 130, 0.5);
+}
+
+#win-screen p {
+    color: #fff8e1;
+}
+
+/* Marco del Lienzo */
+#canvas-frame {
+    width: min(85vw, 380px);
+    aspect-ratio: 768 / 1365;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+    border: 2px solid #ffe082;
+    background: #111a2e; /* Fondo del bastidor antes de ser pintado */
+    overflow: hidden;
+    position: relative;
+}
+
+#final-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Inicia totalmente oculto para ser pintado */
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+}
+
+/* Animación de Pincel / Pintado Diagional */
+#final-image.paint-active {
+    animation: paintCanvas 122s linear forwards; /* Duración ajustada a la canción */
+}
+
+@keyframes paintCanvas {
+    0% {
+        clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+        filter: brightness(1.35);
+    }
+    100% {
+        clip-path: polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%);
+        filter: brightness(1);
+    }
+}
+
+.love-note {
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 224, 130, 0.4);
+    padding: 10px 20px;
+    border-radius: 20px;
+    max-width: 320px;
+}
+
+.love-note p {
+    font-style: italic;
+    font-size: 0.9rem;
+    margin: 0;
+    color: #fff9c4;
+}
+
+/* PÉTALOS AMARILLOS */
+#petals-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.petal {
+    position: absolute;
+    top: -10%;
+    background: linear-gradient(135deg, #fff176, #fbc02d);
+    border-radius: 15px 0 15px 0;
+    opacity: 0.85;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(0vh) rotate(0deg) translateX(0px); opacity: 0.9; }
+    50% { transform: translateY(50vh) rotate(180deg) translateX(25px); }
+    100% { transform: translateY(105vh) rotate(360deg) translateX(-25px); opacity: 0.2; }
+}
