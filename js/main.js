@@ -1,5 +1,5 @@
-const COLS = 5;
-const ROWS = 10;
+const COLS = 8;
+const ROWS = 14;
 const TOTAL_PIECES = COLS * ROWS;
 
 const IMAGE_URL = 'img/imgOne.jpg'; 

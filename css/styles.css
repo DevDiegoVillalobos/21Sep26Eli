@@ -203,7 +203,8 @@ h1 {
 }
 
 #puzzle-container {
-    width: min(85vw, 380px); 
+    width: min(calc(100vw - 30px), 380px);
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,8 +215,8 @@ h1 {
     width: 100%;
     aspect-ratio: 768 / 1365;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); 
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(8, 1fr); 
+    grid-template-rows: repeat(14, 1fr);
     gap: 1px;
     background: #e0e0e0;
     padding: 2px;
@@ -288,7 +289,8 @@ h1 {
 
 /* Marco del Lienzo */
 #canvas-frame {
-    width: min(85vw, 380px);
+    width: min(calc(100vw - 20px), 380px);
+    max-width: 100%;
     aspect-ratio: 768 / 1365;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.7);
