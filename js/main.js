@@ -6,6 +6,12 @@ const IMAGE_URL = 'img/imgOne.jpg';
 let pieces = [];
 let selectedTile = null;
 let audioStarted = false;
+const lockScreen = document.getElementById('lock-screen');
+const lockStatus = document.getElementById('lock-status');
+const lockSound = document.getElementById('lock-sound');
+const reels = [...document.querySelectorAll('.digit-reel')];
+const combination = [0, 0, 0];
+const unlockCode = [8, 6, 4];
 
 const board = document.getElementById('board');
 const songOne = document.getElementById('songOne');
@@ -16,8 +22,104 @@ const volumeSlider = document.getElementById('volume-slider');
 const lockedCountEl = document.getElementById('locked-count');
 const finalImage = document.getElementById('final-image');
 
+document.body.classList.add('is-locked');
+
 let activeSong = songOne;
 let isSeeking = false;
+
+function playLockMoveSound() {
+    if (lockSound) {
+        lockSound.currentTime = 0;
+        lockSound.play().catch(() => playFallbackLockSound());
+        return;
+    }
+    playFallbackLockSound();
+}
+
+function playFallbackLockSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(120, ctx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.07);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.07);
+    } catch (e) {}
+}
+
+function renderReel(reel, value) {
+    reel.innerHTML = '';
+    const strip = document.createElement('div');
+    strip.className = 'digit-strip';
+    [-1, 0, 1].forEach(offset => {
+        const digit = document.createElement('span');
+        digit.className = `digit${offset === 0 ? ' current' : ''}`;
+        digit.textContent = (value + offset + 10) % 10;
+        strip.appendChild(digit);
+    });
+    reel.appendChild(strip);
+}
+
+function moveReel(index, direction) {
+    combination[index] = (combination[index] + direction + 10) % 10;
+    renderReel(reels[index], combination[index]);
+    playLockMoveSound();
+    if (combination.every((digit, digitIndex) => digit === unlockCode[digitIndex])) {
+        unlockGame();
+        return;
+    }
+    lockStatus.textContent = 'Alinea la combinación';
+    lockStatus.classList.remove('error');
+}
+
+function setupLockReel(reel, index) {
+    let startY = null;
+    reel.addEventListener('pointerdown', event => {
+        startY = event.clientY;
+        reel.setPointerCapture(event.pointerId);
+    });
+    reel.addEventListener('pointerup', event => {
+        if (startY === null) return;
+        const distance = event.clientY - startY;
+        if (Math.abs(distance) > 10) moveReel(index, distance < 0 ? 1 : -1);
+        startY = null;
+    });
+    reel.addEventListener('keydown', event => {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            event.preventDefault();
+            moveReel(index, event.key === 'ArrowUp' ? 1 : -1);
+        }
+    });
+    renderReel(reel, combination[index]);
+}
+
+function unlockGame() {
+    if (combination.every((digit, index) => digit === unlockCode[index])) {
+        lockStatus.textContent = 'Cerradura abierta';
+        lockScreen.classList.add('opened');
+        window.setTimeout(() => {
+            lockScreen.classList.add('unlocked');
+            document.body.classList.remove('is-locked');
+        }, 650);
+        window.setTimeout(() => lockScreen.remove(), 1500);
+        return;
+    }
+    lockStatus.textContent = 'La combinación no coincide';
+    lockStatus.classList.add('error');
+    lockScreen.classList.remove('shake');
+    void lockScreen.offsetWidth;
+    lockScreen.classList.add('shake');
+}
+
+reels.forEach(setupLockReel);
 
 // Web Audio API para sonido de encaje mágico sintetizado
 function playSnapSound() {

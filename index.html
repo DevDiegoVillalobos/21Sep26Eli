@@ -8,9 +8,28 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <!-- Cerradura inicial -->
+  <div id="lock-screen" role="dialog" aria-modal="true" aria-labelledby="lock-title">
+    <div class="lock-panel">
+      <div class="lock-shackle" aria-hidden="true"></div>
+      <div class="lock-body">
+        <span class="lock-mark" aria-hidden="true">✦</span>
+        <h1 id="lock-title">Contraseña</h1>
+        <p class="lock-subtitle">- por orden de nacimiento -</p>
+        <div id="combination-lock" aria-label="Combinación de tres dígitos">
+          <div class="digit-reel" data-index="0" tabindex="0" aria-label="Primer dígito"></div>
+          <div class="digit-reel" data-index="1" tabindex="0" aria-label="Segundo dígito"></div>
+          <div class="digit-reel" data-index="2" tabindex="0" aria-label="Tercer dígito"></div>
+        </div>
+        <p id="lock-status" aria-live="polite">Desliza cada rueda</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Elementos de Audio (songTwo ya no lleva loop obligatorio para detectar su final) -->
   <audio id="songOne" src="sound/songOne.mp3" loop preload="auto"></audio>
   <audio id="songTwo" src="sound/songTwo.mp3" preload="auto"></audio>
+  <audio id="lock-sound" src="sound/sound.mp3" preload="auto"></audio>
 
   <!-- Overlay de Transición: Flor Blanca -->
   <div id="flower-overlay">
